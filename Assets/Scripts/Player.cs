@@ -17,12 +17,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(KeyCode.S)) this.transform.Translate(0,0,-0.01f);   //後退
-        if(Input.GetKey(KeyCode.W)) this.transform.Translate(0,0,0.01f);    //前進
-        if(Input.GetKey(KeyCode.A)) this.transform.Translate(-0.01f,0,0);   //左へ移動
-        if(Input.GetKey(KeyCode.D)) this.transform.Translate(0.01f,0,0);    //右へ移動
+        float mouseX = Input.GetAxis("Mouse X");    //マウスのx移動量
+        float mouseY = Input.GetAxis("Mouse Y");    //マウスのy移動量
+        if(Input.GetKey(KeyCode.S)) this.transform.Translate(0,0,-0.1f);   //後退
+        if(Input.GetKey(KeyCode.W)) this.transform.Translate(0,0,0.1f);    //前進
+        if(Input.GetKey(KeyCode.A)) this.transform.Translate(-0.1f,0,0);   //左へ移動
+        if(Input.GetKey(KeyCode.D)) this.transform.Translate(0.1f,0,0);    //右へ移動
 
         if(isGround && Input.GetKeyDown("space")) rb.AddForce(new Vector3(0, 200, 0));
+
+        if(Mathf.Abs(mouseX) > 0.001f) transform.RotateAround(this.transform.position, Vector3.up, mouseX);
+        if(Mathf.Abs(mouseY) > 0.001f) transform.RotateAround(this.transform.position, Vector3.right, mouseY);
     }
 
     void OnTriggerStay(Collider other)
