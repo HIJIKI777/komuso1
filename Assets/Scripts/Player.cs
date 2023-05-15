@@ -7,11 +7,15 @@ public class Player : MonoBehaviour
 
     [SerializeField]private bool isGround = false;
     private Rigidbody rb;
+    [SerializeField] private int HP = 100;
+    public GameObject AttackArea;
+    [SerializeField] float AttackTime;
+    private float UnableToInputTime = 0.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        AttackArea.SetActive(false);
     }
 
     // Update is called once per frame
@@ -26,8 +30,21 @@ public class Player : MonoBehaviour
 
         if(isGround && Input.GetKeyDown("space")) rb.AddForce(new Vector3(0, 200, 0));
 
+        //マウスを動かして視点移動
         if(Mathf.Abs(mouseX) > 0.001f) transform.RotateAround(this.transform.position, Vector3.up, mouseX);
         if(Mathf.Abs(mouseY) > 0.001f) transform.RotateAround(this.transform.position, Vector3.right, mouseY);
+
+        if(Input.GetMouseButton(0) && UnableToInputTime <= 0.0f) UnableToInputTime = AttackTime;
+
+        if(UnableToInputTime > AttackTime - 0.2f){
+            AttackArea.SetActive(true);
+            UnableToInputTime -= Time.deltaTime;
+            // this.transform.rotation.z -= 0.1f;
+        }else if(UnableToInputTime <= AttackTime - 0.2f && UnableToInputTime >= 0.0f){
+            UnableToInputTime -= Time.deltaTime;
+            AttackArea.SetActive(false);
+            // this.transform.rotation.z -= 0.1f;
+        }
     }
 
     void OnTriggerStay(Collider other)
@@ -38,6 +55,10 @@ public class Player : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (other.gameObject.name == "Ground" ) isGround = false;
+    }
+
+    void OnCollisionEnter(Collision collision){
+        if(collision.gameObject.tag == "Enemy") HP -=10;
     }
 
 }
