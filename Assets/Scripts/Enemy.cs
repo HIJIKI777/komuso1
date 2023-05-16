@@ -19,4 +19,17 @@ public class Enemy : MonoBehaviour
     {
         if(target) agent.destination = target.transform.position;
     }
+
+    void OnCollisionEnter(Collision collision){
+        if(collision.gameObject.tag == "AttackArea") Destroy(this);
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.name == "AttackArea"){
+            
+            Destroy(this);
+        }
+    }
+
 }
